@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {UserService} from "@app/_services/user.service";
+import {Qustion} from "@app/_models";
+import {first} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  questions: Qustion[];
+
+  constructor( private userService: UserService ) { }
 
   ngOnInit(): void {
+    this.getQuizList();
+  }
+
+  getQuizList() {
+    this.userService.getQuestions().subscribe(questions => {
+      this.questions = questions;
+    });
   }
 
 }

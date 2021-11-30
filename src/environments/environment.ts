@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://lara-sample.test'
+  apiUrl: '/api/'
 };
 
 /*
