@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, map, Observable, tap} from "rxjs";
+import {BehaviorSubject, map, Observable, of, tap} from "rxjs";
 
 import {environment} from "@environments/environment";
 import {User} from "@app/_models/user";
@@ -43,12 +43,13 @@ export class AuthService {
 }
 
 export class AuthServiceStub {
-  login(email: string, password: string) {
-    return { email, password }
+  login(email: string, password: string): Observable<void> {
+    return of(null);
   }
 
   logout() {
   }
+
 }
 
 
