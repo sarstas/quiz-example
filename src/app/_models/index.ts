@@ -1,4 +1,4 @@
 export * from './user';
-export * from './qustion';
+export * from './question';
 export * from './auth-form-info';
 

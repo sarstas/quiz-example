@@ -81,8 +81,8 @@ describe('LoginComponent', () => {
     click(getBtnEl());
   }
 
-  function changeInput(value: string, HtmlEl: HTMLInputElement): void {
-    const input: HTMLInputElement = HtmlEl;
+  function changeInput(value: string, htmlEl: HTMLInputElement): void {
+    const input: HTMLInputElement = htmlEl;
     input.value = value;
     input.dispatchEvent(new Event('input'));
     fixture.detectChanges();

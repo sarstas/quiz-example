@@ -1,1 +1,21 @@
-<p>home works!</p>
+<form [formGroup]="answerForm" (ngSubmit)="submit()">
+  <mat-card class="shipping-card">
+    <mat-card-header>
+      <mat-card-title>Question: ...</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+<!--        <div class="col" formArrayName="answers">-->
+<!--          <p *ngFor="let answer of answerForm.get('answers'); let i=index">-->
+<!--            <input formControlName="answer">-->
+<!--            &lt;!&ndash;<mat-checkbox formControlName="question">Question</mat-checkbox>&ndash;&gt;-->
+<!--          </p>-->
+<!--        </div>-->
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </mat-card-actions>
+  </mat-card>
+
+</form>

@@ -1,27 +1,56 @@
-import { Component, OnInit } from '@angular/core';
-import {UserService} from "@app/_services/user.service";
-import {Qustion} from "@app/_models";
-import {first} from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {QuestionService} from '@app/_services/question.service';
+import {Question} from '@app/_models';
+import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
 
-  questions: Qustion[];
+  questions: Question[];
+  answerForm: FormGroup;
+  loading: boolean = false;
+  error: string = '';
+  submitted: boolean = false;
 
-  constructor( private userService: UserService ) { }
-
-  ngOnInit(): void {
-    this.getQuizList();
+  constructor(private userService: QuestionService, private _fb: FormBuilder) {
   }
 
-  getQuizList() {
-    this.userService.getQuestions().subscribe(questions => {
-      this.questions = questions;
+  ngOnInit(): void {
+    this.getQuizAll();
+    this.answerFormGroup();
+  }
+
+  answerFormGroup() {
+    this.answerForm = this._fb.group({
+      question: ['Name question'],
+      answers: this._fb.array([])
     });
   }
 
+  getQuizAll() {
+    this.loading = true;
+
+    this.userService.getQuestions().subscribe((questions) => {
+      this.questions = questions.data.data;
+      debugger
+      this.questions.forEach((question) => {
+        question.answers.forEach((answer) => {
+          (this.answerForm.get('answers') as FormArray).push(new FormControl([answer.value]))
+        })
+      })
+      this.loading = false;
+    });
+  }
+
+ /* fu answers(): FormArray {
+    return this.answerForm.get('answers') as FormArray ;
+  };*/
+
+  submit() {
+    console.log(this.answerForm.value);
+  }
 }

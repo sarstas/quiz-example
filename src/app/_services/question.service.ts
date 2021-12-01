@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Qustion} from "@app/_models/qustion";
+import {Question} from "@app/_models/question";
 import {environment} from "@environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class QuestionService {
 
   constructor(private http: HttpClient) { }
 
   getQuestions() {
-    return this.http.get<Qustion[]>(`${environment.apiUrl}questions`);
+    return this.http.get<any>(`${environment.apiUrl}public/questions`);
   }
+
 }
