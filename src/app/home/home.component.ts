@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {QuestionService} from '@app/_services/question.service';
-import {Question} from '@app/_models';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { QuestionService } from '@app/_services/question.service';
+import { Question } from '@app/_models';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AnswersQuiz } from '@app/_models/answers-quiz';
 
 @Component({
   selector: 'app-home',
@@ -9,48 +10,73 @@ import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-
-  questions: Question[];
-  answerForm: FormGroup;
   loading: boolean = false;
-  error: string = '';
-  submitted: boolean = false;
+  currentQuestionIdx: number;
+  questions: Question[];
+  toServer: AnswersQuiz = { questions: [] };
+  formTest: FormGroup = this._fb.group({
+    answers: new FormArray([]),
+  });
 
-  constructor(private userService: QuestionService, private _fb: FormBuilder) {
+  incorrectlyAnswer: number;
+
+  get answersFormArray() {
+    return this.formTest.controls.answers as FormArray;
   }
+
+  constructor(
+    private questionService: QuestionService,
+    private _fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.getQuizAll();
-    this.answerFormGroup();
   }
 
-  answerFormGroup() {
-    this.answerForm = this._fb.group({
-      question: ['Name question'],
-      answers: this._fb.array([])
-    });
-  }
-
-  getQuizAll() {
+  submitTest(questionId: number) {
     this.loading = true;
+    const selectedAnswersIds = this.formTest.value.answers
+      .map((checked, i) =>
+        checked
+          ? this.questions.find((x) => x.id === questionId).answers[i].id
+          : null
+      )
+      .filter((v) => v !== null);
+    this.toServer.questions.push({
+      answerIds: selectedAnswersIds,
+      id: questionId,
+    });
+    this.formTest.reset();
+    this.currentQuestionIdx++;
 
-    this.userService.getQuestions().subscribe((questions) => {
-      this.questions = questions.data.data;
-      debugger
-      this.questions.forEach((question) => {
-        question.answers.forEach((answer) => {
-          (this.answerForm.get('answers') as FormArray).push(new FormControl([answer.value]))
-        })
-      })
+    if (this.currentQuestionIdx === this.questions.length) {
+      this.questionService.sendAnswers(this.toServer).subscribe((data) => {
+        this.incorrectlyAnswer = data.data.length;
+        this.loading = false;
+      });
+    } else {
+      this.loading = false;
+    }
+  }
+
+  private addCheckboxes() {
+    this.questions[0].answers.forEach(() =>
+      this.answersFormArray.push(new FormControl(false))
+    );
+  }
+
+  getQuizAll(): void {
+    this.loading = true;
+    this.questionService.getQuestions().subscribe((questions) => {
+      this.questions = questions.data;
+      this.addCheckboxes();
+      this.currentQuestionIdx = 0;
       this.loading = false;
     });
   }
 
- /* fu answers(): FormArray {
-    return this.answerForm.get('answers') as FormArray ;
-  };*/
-
-  submit() {
-    console.log(this.answerForm.value);
+  retry(): void {
+    this.currentQuestionIdx = 0;
+    this.toServer = { questions: [] };
   }
 }

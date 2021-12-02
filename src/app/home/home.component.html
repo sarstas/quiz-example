@@ -1,21 +1,24 @@
-<form [formGroup]="answerForm" (ngSubmit)="submit()">
-  <mat-card class="shipping-card">
-    <mat-card-header>
-      <mat-card-title>Question: ...</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="row">
-<!--        <div class="col" formArrayName="answers">-->
-<!--          <p *ngFor="let answer of answerForm.get('answers'); let i=index">-->
-<!--            <input formControlName="answer">-->
-<!--            &lt;!&ndash;<mat-checkbox formControlName="question">Question</mat-checkbox>&ndash;&gt;-->
-<!--          </p>-->
-<!--        </div>-->
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
-    </mat-card-actions>
-  </mat-card>
+<header class="header">
+  <h1>Quiz</h1>
+</header>
 
-</form>
+<mat-card>
+  <ng-container *ngIf="!loading && questions[currentQuestionIdx]">
+    <mat-card-title> Question: {{questions[currentQuestionIdx].question}}</mat-card-title>
+    <form [formGroup]="formTest" (ngSubmit)="submitTest(questions[currentQuestionIdx].id)" class="check__list">
+      <label formArrayName="answers" *ngFor="let answer of answersFormArray.controls; let i = index">
+        <input type="checkbox" [formControlName]="i">
+        {{questions[currentQuestionIdx].answers[i].value}}
+      </label>
+
+      <button type="submit" mat-button color="accent">Next</button>
+    </form>
+
+  </ng-container>
+  <ng-container *ngIf="!loading && !questions[currentQuestionIdx]">
+    {{  loading  }} bool
+    you answered {{ questions.length - incorrectlyAnswer }} of {{ questions.length }} correctly
+    <button type="submit" mat-button color="accent" (click)="retry()">To retry</button>
+  </ng-container>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+</mat-card>
