@@ -9,7 +9,6 @@ import {NonAuthGuard} from "@app/_helpers/non-auth.guard";
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent, canActivate: [NonAuthGuard] },
-  // { path: '', component: HomeComponent},
   { path: '**', redirectTo: '' }
 ];
 
