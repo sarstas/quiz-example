@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { QuestionService } from '@app/_services/question.service';
 import { Question } from '@app/_models';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import { AnswersQuiz } from '@app/_models/answers-quiz';
 
 @Component({
@@ -10,18 +10,15 @@ import { AnswersQuiz } from '@app/_models/answers-quiz';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+
   loading: boolean = false;
   currentQuestionIdx: number;
   questions: Question[];
   toServer: AnswersQuiz = { questions: [] };
-  formTest: FormGroup = this._fb.group({
-    answers: new FormArray([]),
-  });
-
+  form: FormGroup;
   incorrectlyAnswer: number;
-
   get answersFormArray() {
-    return this.formTest.controls.answers as FormArray;
+    return this.form.controls.answers as FormArray;
   }
 
   constructor(
@@ -30,12 +27,15 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.form = this._fb.group({
+      answers: new FormArray([], minSelectedCheckboxes(1)),
+    });
     this.getQuizAll();
   }
 
-  submitTest(questionId: number) {
+  submitForm(questionId: number) {
     this.loading = true;
-    const selectedAnswersIds = this.formTest.value.answers
+    const selectedAnswersIds = this.form.value.answers
       .map((checked, i) =>
         checked
           ? this.questions.find((x) => x.id === questionId).answers[i].id
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
       answerIds: selectedAnswersIds,
       id: questionId,
     });
-    this.formTest.reset();
+    this.form.reset();
     this.currentQuestionIdx++;
 
     if (this.currentQuestionIdx === this.questions.length) {
@@ -79,4 +79,15 @@ export class HomeComponent implements OnInit {
     this.currentQuestionIdx = 0;
     this.toServer = { questions: [] };
   }
+}
+
+function minSelectedCheckboxes(min = 1) {
+  const validator: ValidatorFn = (formArray: FormArray) => {
+    const totalSelected = formArray.controls
+      .map(control => control.value)
+      .reduce((prev, next) => next ? prev + next : prev, 0);
+    return totalSelected >= min ? null : { required: true };
+  };
+
+  return validator;
 }

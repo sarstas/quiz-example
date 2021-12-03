@@ -5,13 +5,13 @@
 <mat-card>
   <ng-container *ngIf="!loading && questions[currentQuestionIdx]">
     <mat-card-title> Question: {{questions[currentQuestionIdx].question}}</mat-card-title>
-    <form [formGroup]="formTest" (ngSubmit)="submitTest(questions[currentQuestionIdx].id)" class="check__list">
+    <form [formGroup]="form" (ngSubmit)="submitForm(questions[currentQuestionIdx].id)" class="check__list">
       <label formArrayName="answers" *ngFor="let answer of answersFormArray.controls; let i = index">
         <input type="checkbox" [formControlName]="i">
         {{questions[currentQuestionIdx].answers[i].value}}
       </label>
 
-      <button type="submit" mat-button color="accent">Next</button>
+      <button type="submit" mat-button color="accent" [disabled]="!form.valid">Next</button>
     </form>
 
   </ng-container>
