@@ -2,23 +2,28 @@
   <h1>Quiz</h1>
 </header>
 
-<mat-card>
-  <ng-container *ngIf="!loading && questions[currentQuestionIdx]">
+<mat-card class="card">
+  <ng-container *ngIf="!loading && questions[currentQuestionIdx]; else finishBlock">
     <mat-card-title> Question: {{questions[currentQuestionIdx].question}}</mat-card-title>
+    <hr>
     <form [formGroup]="form" (ngSubmit)="submitForm(questions[currentQuestionIdx].id)" class="check__list">
       <label formArrayName="answers" *ngFor="let answer of answersFormArray.controls; let i = index">
         <input type="checkbox" [formControlName]="i">
         {{questions[currentQuestionIdx].answers[i].value}}
       </label>
-
       <button type="submit" mat-button color="accent" [disabled]="!form.valid">Next</button>
     </form>
+  </ng-container>
 
-  </ng-container>
-  <ng-container *ngIf="!loading && !questions[currentQuestionIdx]">
-    {{  loading  }} bool
-    you answered {{ questions.length - incorrectlyAnswer }} of {{ questions.length }} correctly
-    <button type="submit" mat-button color="accent" (click)="retry()">To retry</button>
-  </ng-container>
+  <ng-template #finishBlock>
+    <div class="check__finish">
+      <mat-card-title>
+        you answered {{ questions.length - incorrectlyAnswer }} of {{ questions.length }} correctly
+      </mat-card-title>
+      <button type="submit" mat-button color="accent" (click)="retry()">To retry</button>
+    </div>
+  </ng-template>
+
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 </mat-card>
+

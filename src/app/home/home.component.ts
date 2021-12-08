@@ -13,10 +13,11 @@ export class HomeComponent implements OnInit {
 
   loading: boolean = false;
   currentQuestionIdx: number;
-  questions: Question[];
+  questions: Question[] = [];
   toServer: AnswersQuiz = { questions: [] };
   form: FormGroup;
   incorrectlyAnswer: number;
+
   get answersFormArray() {
     return this.form.controls.answers as FormArray;
   }
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._fb.group({
+      // answers: new FormArray([], minSelectedCheckboxes(1)),
       answers: new FormArray([], minSelectedCheckboxes(1)),
     });
     this.getQuizAll();
@@ -38,7 +40,7 @@ export class HomeComponent implements OnInit {
     const selectedAnswersIds = this.form.value.answers
       .map((checked, i) =>
         checked
-          ? this.questions.find((x) => x.id === questionId).answers[i].id
+          ? this.questions.find((question) => question.id === questionId).answers[i].id
           : null
       )
       .filter((v) => v !== null);
