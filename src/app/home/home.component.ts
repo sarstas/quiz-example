@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { QuestionService } from '@app/_services/question.service';
-import { Question } from '@app/_models';
 import {FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
+
+import { QuestionService } from '@app/_services';
+import { Question } from '@app/_models/question';
 import { AnswersQuiz } from '@app/_models/answers-quiz';
 
 @Component({
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
   questions: Question[] = [];
   toServer: AnswersQuiz = { questions: [] };
   form: FormGroup;
-  incorrectlyAnswer: number;
+  incorrect: number;
 
   get answersFormArray() {
     return this.form.controls.answers as FormArray;
@@ -29,7 +30,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._fb.group({
-      // answers: new FormArray([], minSelectedCheckboxes(1)),
       answers: new FormArray([], minSelectedCheckboxes(1)),
     });
     this.getQuizAll();
@@ -43,17 +43,17 @@ export class HomeComponent implements OnInit {
           ? this.questions.find((question) => question.id === questionId).answers[i].id
           : null
       )
-      .filter((v) => v !== null);
+      .filter((res) => res !== null);
     this.toServer.questions.push({
-      answerIds: selectedAnswersIds,
       id: questionId,
+      answerIds: selectedAnswersIds
     });
     this.form.reset();
     this.currentQuestionIdx++;
 
     if (this.currentQuestionIdx === this.questions.length) {
       this.questionService.sendAnswers(this.toServer).subscribe((data) => {
-        this.incorrectlyAnswer = data.data.length;
+        this.incorrect = data.data.length;
         this.loading = false;
       });
     } else {

@@ -16,9 +16,9 @@
   </ng-container>
 
   <ng-template #finishBlock>
-    <div class="check__finish">
+    <div class="check__finish" *ngIf="!loading">
       <mat-card-title>
-        you answered {{ questions.length - incorrectlyAnswer }} of {{ questions.length }} correctly
+        you answered {{ questions.length - incorrect }} of {{ questions.length }} correctly
       </mat-card-title>
       <button type="submit" mat-button color="accent" (click)="retry()">To retry</button>
     </div>

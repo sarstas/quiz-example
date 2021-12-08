@@ -1,5 +1,5 @@
 import {AnswerQuestion} from "@app/_models/answer-question";
 
-export class ResponseFromServe {
+export interface ResponseFromServe {
   data: AnswerQuestion[]
 }
