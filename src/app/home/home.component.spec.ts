@@ -1,9 +1,12 @@
 import { QuestionService, QuestionServiceStub } from '@app/_services';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HomeComponent } from '@app/home/home.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { By } from '@angular/platform-browser';
+import { click } from '../../test';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -12,8 +15,15 @@ describe('HomeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, RouterTestingModule, MatCardModule],
-      declarations: [ HomeComponent ],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+        MatCardModule
+      ],
+      declarations: [
+        HomeComponent,
+        MatProgressBar
+      ],
       providers: [
         {
           provide: QuestionService,
@@ -34,11 +44,43 @@ describe('HomeComponent', () => {
     expect(component).toBeDefined();
   });
 
-  it('should to get questions', () => {
+  it('should called function getQuestions', () => {
     const spy = spyOn(questionService, 'getQuestions').and.callThrough();
-
-    // ngOnInit();
-
+    fixture.detectChanges();
+    expect(spy).toHaveBeenCalled();
   });
+
+  fit('should send questions when the user has answered all the questions', waitForAsync(() => {
+    const spy = spyOn(questionService, 'sendAnswers').and.callThrough();
+
+    fixture.detectChanges();
+
+    changeInput();
+    clickSubmit();
+    // fixture.whenStable().then(() => {
+    //
+    //
+    // });
+    expect(spy).toHaveBeenCalled();
+  }));
+
+  function getBtnEl(): HTMLButtonElement {
+    return fixture.debugElement.query(By.css('button')).nativeElement;
+  }
+
+  function getCheckboxInput(): HTMLInputElement {
+    return fixture.debugElement.query(By.css('.btn__submit')).nativeElement;
+  }
+
+  function changeInput(): void {
+    const input = this.getCheckboxInput()
+    input.value = true;
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+  }
+
+  function clickSubmit(): void {
+    click(getBtnEl());
+  }
 
 });

@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     this.getQuizAll();
   }
 
-  submitForm(questionId: number) {
+  handleSubmitForm(questionId: number) {
     this.loading = true;
     const selectedAnswersIds = this.form.value.answers
       .map((checked, i) =>
@@ -48,9 +48,16 @@ export class HomeComponent implements OnInit {
       id: questionId,
       answerIds: selectedAnswersIds
     });
+    this.nextCardQuiz();
+    this.sendDataToServer();
+  }
+
+  private nextCardQuiz() {
     this.form.reset();
     this.currentQuestionIdx++;
+  }
 
+  private sendDataToServer() {
     if (this.currentQuestionIdx === this.questions.length) {
       this.questionService.sendAnswers(this.toServer).subscribe((data) => {
         this.incorrect = data.data.length;
@@ -67,7 +74,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  getQuizAll(): void {
+  private getQuizAll(): void {
     this.loading = true;
     this.questionService.getQuestions().subscribe((questions) => {
       this.questions = questions.data;
