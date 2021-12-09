@@ -47,28 +47,7 @@ export class QuestionServiceStub {
                 ]
               }
             ]
-          },
-          {
-            id: 2,
-            question: "question2",
-            answers: [
-              {
-                id: 1,
-                answerIds: [
-                  {
-                    id: 1,
-                    value: "value1"
-                  },
-                  {
-                    id: 2,
-                    value: "value2"
-                  },
-                ]
-              }
-            ]
-          },
-
-
+          }
           ]
         }
   )
