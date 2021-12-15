@@ -50,32 +50,28 @@ describe('HomeComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  fit('should send questions when the user has answered all the questions', waitForAsync(() => {
+  fit('should send questions when the user has answered all the questions', () => {
     const spy = spyOn(questionService, 'sendAnswers').and.callThrough();
 
-    fixture.detectChanges();
-
-    changeInput();
+    changeCheckbox();
     clickSubmit();
-    // fixture.whenStable().then(() => {
-    //
-    //
-    // });
+
     expect(spy).toHaveBeenCalled();
-  }));
+  });
 
   function getBtnEl(): HTMLButtonElement {
     return fixture.debugElement.query(By.css('button')).nativeElement;
   }
 
   function getCheckboxInput(): HTMLInputElement {
-    return fixture.debugElement.query(By.css('.btn__submit')).nativeElement;
+    return fixture.debugElement.query(By.css('[type=checkbox]')).nativeElement;
   }
 
-  function changeInput(): void {
-    const input = this.getCheckboxInput()
-    input.value = true;
-    input.dispatchEvent(new Event('input'));
+  function changeCheckbox(): void {
+    const input = getCheckboxInput()
+
+    input.checked = true;
+    input.dispatchEvent(new Event('change'));
     fixture.detectChanges();
   }
 

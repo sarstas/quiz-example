@@ -1,6 +1,6 @@
 import {Answer} from "@app/_models/answer";
 
-export interface Question {
+export class Question {
   id: number;
   question: string;
   answers: Answer [];

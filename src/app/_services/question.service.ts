@@ -54,7 +54,9 @@ export class QuestionServiceStub {
   }
 
   sendAnswers(answer): Observable<ResponseFromServe> {
-    return of(null)
+    return of({
+      data: []
+    })
   }
 
 }

@@ -13,26 +13,35 @@ import { AnswersQuiz } from '@app/_models/answers-quiz';
 export class HomeComponent implements OnInit {
 
   loading: boolean = false;
-  currentQuestionIdx: number;
   questions: Question[] = [];
   toServer: AnswersQuiz = { questions: [] };
   form: FormGroup;
-  incorrect: number;
+  _incorrect: number;
+  _currentQuestionIdx: number = 0;
+
 
   get answersFormArray() {
     return this.form.controls.answers as FormArray;
   }
 
+  get getCurrentQuestion() {
+    return this.questions[this._currentQuestionIdx].question;
+  }
+
   constructor(
     private questionService: QuestionService,
     private _fb: FormBuilder
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
     this.form = this._fb.group({
       answers: new FormArray([], minSelectedCheckboxes(1)),
     });
     this.getQuizAll();
+    console.log(this.getCurrentQuestion)
+    // console.info('created');
   }
 
   handleSubmitForm(questionId: number) {
@@ -54,13 +63,13 @@ export class HomeComponent implements OnInit {
 
   private nextCardQuiz() {
     this.form.reset();
-    this.currentQuestionIdx++;
+    this._currentQuestionIdx++;
   }
 
   private sendDataToServer() {
-    if (this.currentQuestionIdx === this.questions.length) {
+    if (this._currentQuestionIdx === this.questions.length) {
       this.questionService.sendAnswers(this.toServer).subscribe((data) => {
-        this.incorrect = data.data.length;
+        this._incorrect = data.data.length;
         this.loading = false;
       });
     } else {
@@ -79,13 +88,13 @@ export class HomeComponent implements OnInit {
     this.questionService.getQuestions().subscribe((questions) => {
       this.questions = questions.data;
       this.addCheckboxes();
-      this.currentQuestionIdx = 0;
+      this._currentQuestionIdx = 0;
       this.loading = false;
     });
   }
 
   retry(): void {
-    this.currentQuestionIdx = 0;
+    this._currentQuestionIdx = 0;
     this.toServer = { questions: [] };
   }
 }
