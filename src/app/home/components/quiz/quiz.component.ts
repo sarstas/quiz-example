@@ -4,6 +4,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angu
 import { Question } from '@app/home/entietis/question';
 import { AnswersQuiz } from '@app/home/entietis/answers-quiz';
 import { QuestionService } from '@app/home/providers/question.service';
+import { MyValidators } from '../../../shared/validators/my.validators'
 
 @Component({
   selector: 'app-home',
@@ -16,16 +17,19 @@ export class QuizComponent implements OnInit {
   questions: Question[] = [];
   toServer: AnswersQuiz = { questions: [] };
   form: FormGroup;
-  _incorrect: number;
-  _currentQuestionIdx: number = 0;
-
+  private _incorrect: number;
+  private _currentQuestionIdx: number = 0;
 
   get answersFormArray() {
     return this.form.controls.answers as FormArray;
   }
 
   get getCurrentQuestion() {
-    return this.questions[this._currentQuestionIdx]?.question;
+    return this.questions[this._currentQuestionIdx];
+  }
+
+  get getIncorrectAnswers() {
+    return this.questions.length - this._incorrect
   }
 
   constructor(
@@ -37,11 +41,11 @@ export class QuizComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._fb.group({
-      answers: new FormArray([], minSelectedCheckboxes(1)),
+      answers: new FormArray([], [
+        MyValidators.minSelectedCheckboxes(1)
+      ]),
     });
-    this.getQuizAll();
-    console.log(this.getCurrentQuestion)
-    // console.info('created');
+    this._getQuizAll();
   }
 
   handleSubmitForm(questionId: number) {
@@ -57,16 +61,16 @@ export class QuizComponent implements OnInit {
       id: questionId,
       answerIds: selectedAnswersIds
     });
-    this.nextCardQuiz();
-    this.sendDataToServer();
+    this._nextCardQuiz();
+    this._sendDataToServer();
   }
 
-  private nextCardQuiz() {
+  private _nextCardQuiz() {
     this.form.reset();
     this._currentQuestionIdx++;
   }
 
-  private sendDataToServer() {
+  private _sendDataToServer() {
     if (this._currentQuestionIdx === this.questions.length) {
       this.questionService.sendAnswers(this.toServer).subscribe((data) => {
         this._incorrect = data.data.length;
@@ -77,17 +81,17 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  private addCheckboxes() {
+  private _addCheckboxes() {
     this.questions[0].answers.forEach(() =>
       this.answersFormArray.push(new FormControl(false))
     );
   }
 
-  private getQuizAll(): void {
+  private _getQuizAll(): void {
     this.loading = true;
     this.questionService.getQuestions().subscribe((questions) => {
       this.questions = questions.data;
-      this.addCheckboxes();
+      this._addCheckboxes();
       this._currentQuestionIdx = 0;
       this.loading = false;
     });
@@ -99,13 +103,13 @@ export class QuizComponent implements OnInit {
   }
 }
 
-function minSelectedCheckboxes(min = 1) {
-  const validator: ValidatorFn = (formArray: FormArray) => {
-    const totalSelected = formArray.controls
-      .map(control => control.value)
-      .reduce((prev, next) => next ? prev + next : prev, 0);
-    return totalSelected >= min ? null : { required: true };
-  };
-
-  return validator;
-}
+// function minSelectedCheckboxes(min = 1) {
+//   const validator: ValidatorFn = (formArray: FormArray) => {
+//     const totalSelected = formArray.controls
+//       .map(control => control.value)
+//       .reduce((prev, next) => next ? prev + next : prev, 0);
+//     return totalSelected >= min ? null : { required: true };
+//   };
+//
+//   return validator;
+// }
