@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AnswersQuiz } from '@app/_models/answers-quiz';
+import { AnswersQuiz } from '@app/home/entietis/answers-quiz';
 import { Observable, of } from 'rxjs';
-import { ResponseFromServe } from '@app/_models/response-from-serve';
+import { ResponseFromServe } from '@app/home/entietis/response-from-serve';
 import { environment } from '@environments/environment';
 
 @Injectable({

@@ -1,11 +1,11 @@
-import { LoginComponent } from '@app/login/login.component';
+import { LoginComponent } from '@app/auth/components/login/login.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService, AuthServiceStub } from '@app/_services';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import {click} from "../../test";
+import {click} from "../../../../test";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

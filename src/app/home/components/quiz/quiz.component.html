@@ -1,0 +1,29 @@
+<header class="header">
+  <h1>Quiz</h1>
+</header>
+
+<mat-card class="card">
+  <ng-container *ngIf="!loading && questions[_currentQuestionIdx]; else finishBlock">
+    <mat-card-title> Question: {{ questions[_currentQuestionIdx].question }}</mat-card-title>
+    <form [formGroup]="form" (ngSubmit)="handleSubmitForm(questions[_currentQuestionIdx].id)" class="check__list">
+      <label formArrayName="answers" *ngFor="let answer of answersFormArray.controls; let i = index">
+        <input type="checkbox" [formControlName]="i">
+        {{ questions[_currentQuestionIdx].answers[i].value }}
+      </label>
+      <button type="submit" class="btn__submit"  mat-button color="accent" [disabled]="!form.valid">Next</button>
+    </form>
+  </ng-container>
+
+  <ng-template #finishBlock>
+    <div class="check__finish" *ngIf="!loading">
+      <mat-card-title>
+        you answered {{ questions.length - _incorrect }} of {{ questions.length }} correctly
+      </mat-card-title>
+      <button type="submit" class="btn__submit" mat-button color="accent" (click)="retry()">To retry</button>
+    </div>
+  </ng-template>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+</mat-card>
+
+

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
 
-import {AuthService} from "@app/_services";
-import {User} from "@app/_models/user";
+import {User} from "@app/home/entietis/user";
+import { AuthService } from '@app/auth/providers/auth.service';
 
 @Component({
   selector: 'app-root',

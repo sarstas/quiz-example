@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, map, Observable, of, tap} from "rxjs";
 
 import {environment} from "@environments/environment";
-import {User} from "@app/_models/user";
+import {User} from "@app/home/entietis/user";
 
 @Injectable({
   providedIn: 'root'

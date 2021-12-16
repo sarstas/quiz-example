@@ -1,4 +1,4 @@
-import {Answer} from "@app/_models/answer";
+import {Answer} from "@app/home/entietis/answer";
 
 export class Question {
   id: number;

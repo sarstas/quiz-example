@@ -1,17 +1,17 @@
 import { QuestionService, QuestionServiceStub } from '@app/_services';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HomeComponent } from '@app/home/home.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { By } from '@angular/platform-browser';
-import { click } from '../../test';
+import { click } from '../../../../test';
+import { QuizComponent } from '@app/home/components/quiz/quiz.component';
 
-describe('HomeComponent', () => {
-  let component: HomeComponent;
+describe('QuizComponent', () => {
+  let component: QuizComponent;
   let questionService: QuestionService;
-  let fixture: ComponentFixture<HomeComponent>;
+  let fixture: ComponentFixture<QuizComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe('HomeComponent', () => {
         MatCardModule
       ],
       declarations: [
-        HomeComponent,
+        QuizComponent,
         MatProgressBar
       ],
       providers: [
@@ -32,7 +32,7 @@ describe('HomeComponent', () => {
       ],
     });
 
-    fixture = TestBed.createComponent(HomeComponent);
+    fixture = TestBed.createComponent(QuizComponent);
     component = fixture.componentInstance;
 
     questionService = TestBed.inject(QuestionService);
