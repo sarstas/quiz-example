@@ -3,6 +3,11 @@ import { map, Observable, Subject } from 'rxjs';
 import { IResponse, ResponseStatus } from '@app/shared/rest/rest.interface';
 import { RestFatalError } from '@app/shared/rest/errors/fatal-error';
 import { IListItem } from '@app/shared/entities/list-item.interface';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class RestService {
 
@@ -35,7 +40,6 @@ export class RestService {
       map((data: IResponse) => this._toResponse(data))
     );
   }
-
 
   private _toResponse(response: IResponse) {
     if (response.status === ResponseStatus.Success) {

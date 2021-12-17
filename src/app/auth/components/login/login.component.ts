@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
       password: ['password', Validators.required],
     });
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    console.log(this.loginForm.valid)
   }
 
   get f() {
@@ -39,9 +38,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-
     this.submitted = true;
-
     if (this.loginForm.invalid) {
       return;
     }
@@ -50,7 +47,7 @@ export class LoginComponent implements OnInit {
       .login({email: this.f.email.value, password: this.f.password.value})
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: () => {
+        next: (res) => {
           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
           this.router.navigateByUrl(returnUrl);
         },

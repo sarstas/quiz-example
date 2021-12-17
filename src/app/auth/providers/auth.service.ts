@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 
 import { environment } from '@environments/environment';
@@ -12,13 +11,11 @@ import { RestService } from '@app/shared/rest/rest.service';
 })
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
   public token: string;
+  public currentUser: Observable<User>;
 
   constructor(
-    // private http: HttpClient,
     private rest: RestService,
-
   ) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
@@ -29,23 +26,19 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  // login(email: string, password: string): Observable<void> {
-  //   return this.http.post<any>(`${environment.apiUrl}public/login`, {email, password})
-  //     .pipe(tap(response => {
-  //       const {info, token} = response.data;
-  //
-  //       localStorage.setItem('currentUser', JSON.stringify(info));
-  //       localStorage.setItem('token', token);
-  //
-  //       this.currentUserSubject.next(info);
-  //       this.token = token;
-  //     }));
-  // }
-
   login(user: AuthFormInfo): Observable<void> {
     return this.rest.restPOST(`${environment.apiUrl}public/login`, user)
-  }
+      .pipe(tap(res => {
+        const token = res['token'];
+        const info = res['info'];
 
+        localStorage.setItem('currentUser', JSON.stringify(info));
+        localStorage.setItem('token', token);
+
+        this.currentUserSubject.next(info);
+        this.token = token;
+      }));
+  }
 
 
   logout() {

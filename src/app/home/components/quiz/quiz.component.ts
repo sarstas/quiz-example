@@ -72,8 +72,8 @@ export class QuizComponent implements OnInit {
 
   private _sendDataToServer() {
     if (this._currentQuestionIdx === this.questions.length) {
-      this.questionService.sendAnswers(this.toServer).subscribe((data) => {
-        this._incorrect = data.data.length;
+      this.questionService.sendAnswers(this.toServer).subscribe((res) => {
+        this._incorrect = res.length
         this.loading = false;
       });
     } else {
@@ -90,7 +90,8 @@ export class QuizComponent implements OnInit {
   private _getQuizAll(): void {
     this.loading = true;
     this.questionService.getQuestions().subscribe((questions) => {
-      this.questions = questions.data;
+
+      this.questions = questions;
       this._addCheckboxes();
       this._currentQuestionIdx = 0;
       this.loading = false;
@@ -103,13 +104,3 @@ export class QuizComponent implements OnInit {
   }
 }
 
-// function minSelectedCheckboxes(min = 1) {
-//   const validator: ValidatorFn = (formArray: FormArray) => {
-//     const totalSelected = formArray.controls
-//       .map(control => control.value)
-//       .reduce((prev, next) => next ? prev + next : prev, 0);
-//     return totalSelected >= min ? null : { required: true };
-//   };
-//
-//   return validator;
-// }

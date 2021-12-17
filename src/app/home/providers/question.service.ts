@@ -4,23 +4,23 @@ import { AnswersQuiz } from '@app/home/entietis/answers-quiz';
 import { Observable, of } from 'rxjs';
 import { ResponseFromServe } from '@app/home/entietis/response-from-serve';
 import { environment } from '@environments/environment';
+import { RestService } from '@app/shared/rest/rest.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuestionService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(
+    private http: HttpClient,
+    private rest: RestService,
+  ) { }
 
   getQuestions() {
-    return this.http.get<any>(`${environment.apiUrl}public/quiz`);
+    return this.rest.restGET(`${environment.apiUrl}public/quiz`)
   }
 
-  sendAnswers(answer: AnswersQuiz): Observable<ResponseFromServe> {
-    return this.http.post<ResponseFromServe>(
-      `${environment.apiUrl}public/quiz`,
-      answer
-    );
+  sendAnswers(answer: AnswersQuiz): Observable<any> {
+    return this.rest.restPOST(`${environment.apiUrl}public/quiz`, answer);
   }
 }
 

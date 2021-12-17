@@ -1,4 +1,3 @@
-import { QuestionService, QuestionServiceStub } from '@app/_services';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -7,6 +6,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 import { By } from '@angular/platform-browser';
 import { click } from '../../../../test';
 import { QuizComponent } from '@app/home/components/quiz/quiz.component';
+import { QuestionService, QuestionServiceStub } from '@app/home/providers/question.service';
 
 describe('QuizComponent', () => {
   let component: QuizComponent;
