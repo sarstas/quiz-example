@@ -50,7 +50,8 @@ describe('QuizComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  fit('should send questions when the user has answered all the questions', () => {
+  // с fit() заливать вообще нельзя, особенно в боевом проекте, ты прибил остальные тесты
+  it('should send questions when the user has answered all the questions', () => {
     const spy = spyOn(questionService, 'sendAnswers').and.callThrough();
 
     changeCheckbox();

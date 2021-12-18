@@ -11,19 +11,21 @@ import { RestService } from '@app/shared/rest/rest.service';
 })
 export class QuestionService {
   constructor(
-    private http: HttpClient,
+    private http: HttpClient, // лишняя зависимость
     private rest: RestService,
   ) { }
 
   getQuestions() {
-    return this.rest.restGET(`${environment.apiUrl}public/quiz`)
+    return this.rest.restGET(`${environment.apiUrl}public/quiz`) // ${environment.apiUrl}public стоит вынести в restService, смотри как это у нас
   }
 
+  // answers правильно, answer - нет, ты отправляешь сразу ВСЕ ответы
   sendAnswers(answer: AnswersQuiz): Observable<any> {
     return this.rest.restPOST(`${environment.apiUrl}public/quiz`, answer);
   }
 }
 
+// в идеале делать отдельным файлом, потому что иначе является частью прод сборки
 export class QuestionServiceStub {
   getQuestions(): Observable<any> {
     return of(
