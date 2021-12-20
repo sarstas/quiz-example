@@ -1,3 +1,4 @@
+<!--ресурсы переводов не должны быть вшиты в приложение, используй ngx-translate-->
 <header class="header">
   <h1>Quiz</h1>
 </header>
@@ -10,7 +11,9 @@
       [formGroup]="form"
       (ngSubmit)="handleSubmitForm(getCurrentQuestion.id)"
     >
+<!--      массив чекбоксов это отдельный компонент, который можно переиспользовать, смотри app-checkbox-group у нас-->
       <label formArrayName="answers" *ngFor="let answer of answersFormArray.controls; let i = index">
+      <!--потерял материал стили для чекбокса-->
         <input type="checkbox" [formControlName]="i">
         {{ getCurrentQuestion.answers[i].value }}
       </label>
@@ -27,9 +30,12 @@
     </form>
   </ng-container>
 
+  <!--это всё отдельный компонент, зачем городить два компонента в одном компоненте-->
   <ng-template #finishBlock>
     <div class="check__finish" *ngIf="!loading">
       <mat-card-title>
+<!--        плохо по производительности (хотя здесь не критично) getIncorrectAnswers можно рассчитать один раз, когда этот компонент понадобится-->
+<!--        старайся обходиться вообще без геттеров, это ломает производительность-->
         you answered {{ getIncorrectAnswers }} of {{ questions.length }} correctly
       </mat-card-title>
       <button

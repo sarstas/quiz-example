@@ -25,6 +25,8 @@ import { QuizComponent } from './home/components/quiz/quiz.component';
 import { JwtInterceptor } from '@app/auth/jwt.interceptor';
 import { ErrorInterceptor } from '@app/shared/error.interceptor';
 
+// https://angular.io/guide/sharing-ngmodules
+// используй Shared Modules, чтобы таскать зависимости между отдельными модулями системы
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +36,6 @@ import { ErrorInterceptor } from '@app/shared/error.interceptor';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
@@ -49,7 +50,8 @@ import { ErrorInterceptor } from '@app/shared/error.interceptor';
     MatIconModule,
     MatListModule,
     MatCheckboxModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    AppRoutingModule, // стоит подключать последним, чтобы избежать проблем с переопределением роутов
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

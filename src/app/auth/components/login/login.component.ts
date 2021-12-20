@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '@app/auth/providers/auth.service';
 
+// буду проверять, когда появится админка
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

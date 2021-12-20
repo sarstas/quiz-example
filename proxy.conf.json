@@ -1,0 +1,10 @@
+{
+  "/api/public/**": {
+    "target": "http://lara-sample.lan/api/public/",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/public/": ""
+    }
+  }
+}
